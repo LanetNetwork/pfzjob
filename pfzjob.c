@@ -181,6 +181,7 @@ libzjobpool_t* libzjob_init(
 	if (unlikely(zmq_bind(new_pool->zrouter, new_pool->zrouter_uri) == -1))
 		panic("zmq_bind");
 
+	new_pool->index = allocate_pool_index();
 	new_pool->zdealer = zmq_socket(new_pool->zcontext, ZMQ_DEALER);
 	if (unlikely(!new_pool->zdealer))
 		panic("zmq_socket");
@@ -193,7 +194,6 @@ libzjobpool_t* libzjob_init(
 	new_pool->zcontroller = zmq_socket(new_pool->zcontext, ZMQ_PUB);
 	if (unlikely(!new_pool->zcontroller))
 		panic("zmq_socket");
-	new_pool->index = allocate_pool_index();
 	new_pool->zcontroller_uri = pfcq_mstring("inproc://controller_%u", new_pool->index);
 	if (unlikely(!new_pool->zcontroller_uri))
 		panic("pfcq_mstring");
