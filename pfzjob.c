@@ -101,7 +101,7 @@ static void* orchestrator_worker(void* _data)
 				zmq_msg_init(&message);
 				zmq_msg_recv(&message, pool->zrouter, 0);
 				int more = zmq_msg_more(&message);
-				zmq_msg_send(&message, pool->zdealer, more ? ZMQ_SNDMORE: 0);
+				zmq_msg_send(&message, pool->zdealer, more ? ZMQ_SNDMORE : 0);
 				zmq_msg_close(&message);
 				if (!more)
 					break;
@@ -116,7 +116,7 @@ static void* orchestrator_worker(void* _data)
 				zmq_msg_init(&message);
 				zmq_msg_recv(&message, pool->zdealer, 0);
 				int more = zmq_msg_more(&message);
-				zmq_msg_send(&message, pool->zrouter, more ? ZMQ_SNDMORE: 0);
+				zmq_msg_send(&message, pool->zrouter, more ? ZMQ_SNDMORE : 0);
 				zmq_msg_close(&message);
 				if (!more)
 					break;
