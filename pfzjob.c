@@ -156,25 +156,8 @@ pfzjob_pool_t* pfzjob_init(
 	const unsigned int _orchestrator_port,
 	pfzjob_run_t* _handler)
 {
-	int orchestrator_threads = _orchestrator_threads;
-	if (orchestrator_threads < 0)
-		orchestrator_threads = 1;
-	else if (orchestrator_threads == 0)
-	{
-		orchestrator_threads = sysconf(_SC_NPROCESSORS_ONLN);
-		if (unlikely(orchestrator_threads == -1))
-			orchestrator_threads = 1;
-	}
-
-	int worker_threads = _worker_threads;
-	if (worker_threads < 0)
-		worker_threads = 1;
-	else if (worker_threads == 0)
-	{
-		worker_threads = sysconf(_SC_NPROCESSORS_ONLN);
-		if (unlikely(worker_threads == -1))
-			worker_threads = 1;
-	}
+	int orchestrator_threads = pfcq_hint_cpus(_orchestrator_threads);
+	int worker_threads = pfcq_hint_cpus(_worker_threads);
 
 	pfzjob_pool_t* new_pool = pfcq_alloc(sizeof(pfzjob_pool_t));
 	new_pool->name = pfcq_strdup(_pool_name);
