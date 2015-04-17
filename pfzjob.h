@@ -18,23 +18,23 @@
 
 #pragma once
 
-#ifndef _LIBZJOB_H_
-#define _LIBZJOB_H_
+#ifndef __PFZJOB_H__
+#define __PFZJOB_H__
 
 #include <pthread.h>
 #include <zmq.h>
 
-typedef void (libzjob_run_t)(zmq_msg_t*, zmq_msg_t*);
+typedef void (pfzjob_run_t)(zmq_msg_t*, zmq_msg_t*);
 
-typedef struct libzjobworker_context
+typedef struct pfzjobworker_context
 {
 	pthread_t id;
 	void* zresponder;
 	void* zcontrollee;
-	libzjob_run_t* handler;
-} libzjobworker_context_t;
+	pfzjob_run_t* handler;
+} pfzjobworker_context_t;
 
-typedef struct libzjobpool
+typedef struct pfzjob_pool
 {
 	unsigned int index;
 	unsigned int workers_count;
@@ -48,17 +48,17 @@ typedef struct libzjobpool
 	void* zcontroller;
 	char* zcontroller_uri;
 	void* zcontrollee;
-	libzjobworker_context_t* workers;
-} libzjobpool_t;
+	pfzjobworker_context_t* workers;
+} pfzjob_pool_t;
 
-libzjobpool_t* libzjob_init(
+pfzjob_pool_t* pfzjob_init(
 	const char* _pool_name,
 	const unsigned int _orchestrator_threads,
 	const unsigned int _worker_threads,
 	const char* _orchestrator_address,
 	const unsigned int _orchestrator_port,
-	libzjob_run_t* _handler);
-void libzjob_done(libzjobpool_t* _pool);
+	pfzjob_run_t* _handler);
+void pfzjob_done(pfzjob_pool_t* _pool);
 
-#endif /* _LIBZJOB_H_ */
+#endif /* __PFZJOB_H__ */
 

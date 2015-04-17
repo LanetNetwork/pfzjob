@@ -44,7 +44,7 @@ static void* client_worker(void* _data)
 	if (unlikely(!_data))
 		return NULL;
 
-	libzjobworker_context_t* context = _data;
+	pfzjobworker_context_t* context = _data;
 
 	zmq_pollitem_t items[2];
 	items[0].socket = context->zresponder;
@@ -91,7 +91,7 @@ static void* orchestrator_worker(void* _data)
 	if (unlikely(!_data))
 		return NULL;
 
-	libzjobpool_t* pool = _data;
+	pfzjob_pool_t* pool = _data;
 	zmq_pollitem_t items[3];
 	items[0].socket = pool->zrouter;
 	items[0].events = ZMQ_POLLIN;
@@ -148,13 +148,13 @@ static void* orchestrator_worker(void* _data)
 	return NULL;
 }
 
-libzjobpool_t* libzjob_init(
+pfzjob_pool_t* pfzjob_init(
 	const char* _pool_name,
 	const unsigned int _orchestrator_threads,
 	const unsigned int _worker_threads,
 	const char* _orchestrator_address,
 	const unsigned int _orchestrator_port,
-	libzjob_run_t* _handler)
+	pfzjob_run_t* _handler)
 {
 	int orchestrator_threads = _orchestrator_threads;
 	if (orchestrator_threads < 0)
@@ -176,7 +176,7 @@ libzjobpool_t* libzjob_init(
 			worker_threads = 1;
 	}
 
-	libzjobpool_t* new_pool = pfcq_alloc(sizeof(libzjobpool_t));
+	pfzjob_pool_t* new_pool = pfcq_alloc(sizeof(pfzjob_pool_t));
 	new_pool->name = pfcq_strdup(_pool_name);
 	if (unlikely(!new_pool->name))
 		panic("strdup");
@@ -225,7 +225,7 @@ libzjobpool_t* libzjob_init(
 		panic("zmq_setsockopt");
 
 	new_pool->workers_count = worker_threads;
-	new_pool->workers = pfcq_alloc(worker_threads * sizeof(libzjobworker_context_t));
+	new_pool->workers = pfcq_alloc(worker_threads * sizeof(pfzjobworker_context_t));
 	for (unsigned int i = 0; i < new_pool->workers_count; i++)
 	{
 		new_pool->workers[i].handler = _handler;
@@ -252,7 +252,7 @@ libzjobpool_t* libzjob_init(
 	return new_pool;
 }
 
-void libzjob_done(libzjobpool_t* _pool)
+void pfzjob_done(pfzjob_pool_t* _pool)
 {
 	zmq_msg_t shutdown_message;
 	if (unlikely(zmq_msg_init(&shutdown_message) == -1))
