@@ -41,6 +41,8 @@ static unsigned int allocate_pool_index(void)
 
 static void* client_worker(void* _data)
 {
+	pthread_setname_np(pthread_self(), "pfzjob_worker");
+
 	if (unlikely(!_data))
 		return NULL;
 
@@ -88,6 +90,8 @@ static void* client_worker(void* _data)
 
 static void* orchestrator_worker(void* _data)
 {
+	pthread_setname_np(pthread_self(), "pfzjob_orchestrator");
+
 	if (unlikely(!_data))
 		return NULL;
 
