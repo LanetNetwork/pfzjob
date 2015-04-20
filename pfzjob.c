@@ -90,7 +90,7 @@ static void* client_worker(void* _data)
 
 static void* orchestrator_worker(void* _data)
 {
-	pthread_setname_np(pthread_self(), "pfzjob_orchestrator");
+	pthread_setname_np(pthread_self(), "pfzjob_poller");
 
 	if (unlikely(!_data))
 		return NULL;
