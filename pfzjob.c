@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <pfcq.h>
 #include <pfzjob.h>
 #include <pthread.h>
